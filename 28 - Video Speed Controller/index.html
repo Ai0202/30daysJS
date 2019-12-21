@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop
+      controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+  <script>
+    const speed = document.querySelector('.speed');
+    const bar = speed.querySelector('.speed-bar');
+    const video = document.querySelector('.flex');
+
+    isDown = false;
+
+    const handleMove = e => {
+      if (!isDown) return false;
+
+      // カーソルがページの上からどの位置にあるか - 要素の一番上
+      const y = e.pageY - e.target.offsetTop;
+      // カーソルがバーのどの位置にあるか / バーの高さ
+      const percent = y / e.target.offsetHeight;
+      const min = 0.4;
+      const max = 4;
+      const height = (percent * 100) + '%';
+      // console.log(height, percent, e.target.offsetHeight, y, e.pageY);
+
+      const playbackRate = percent * (max - min) + min;
+      bar.style.height = height;
+      bar.textContent = playbackRate.toFixed(2) + 'x';
+
+      video.playbackRate = playbackRate;
+    }
+
+    speed.addEventListener('mousemove', handleMove);
+    speed.addEventListener('mousedown', () => isDown = true);
+    speed.addEventListener('mouseup', () => isDown = false);
+    speed.addEventListener('mouseleave', () => isDown = false);
+  </script>
+</body>
+
+</html>
